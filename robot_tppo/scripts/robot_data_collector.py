@@ -1,12 +1,13 @@
 from rclpy.node import Node 
 from sensor_msgs.msg import Image,LaserScan,Imu,JointState
+from nav_msgs.msg import Odometry
 
 class ComponentDataCollector(Node):
     def __init__(self):
         super().__init__('component_data_collector')
         self._init_subscribers()
         self.data_lidar = {
-            "ranges":{f"{i}":'None' for i in range(30)}
+            "ranges":{f"{i}":100 for i in range(30)} # 100 до инициализации
         }
         self.data_imu = {
             "orientation":          {"x":'None',"y":'None',"z":'None',"w":'None',},
@@ -20,12 +21,14 @@ class ComponentDataCollector(Node):
                 "right_rear_wheel_joint"
         ]
         self.data_joint_states = {j:{'position':'None','velocity':'None','effort':'None'} for j in joints}
+        self.data_odom = {"position": {"x":'None',"y":'None'}}
 
     def _init_subscribers(self):
         """Инициализация подписчиков"""
         self.sub_joint_states = self.create_subscription(JointState,'/joint_states',self.joint_states_callback,10)
         self.sub_imu          = self.create_subscription(Imu,'/imu',self.imu_callback,10)
         self.sub_lidar        = self.create_subscription(LaserScan,'/scan',self.lidar_callback,10)        
+        self.sub_odom         = self.create_subscription(Odometry, '/model/robot_tppo/odometry_with_covariance', self.odom_callback, 10)
 
     def close_subscribers(self):
         """Закрытие всех инициализированных подписчиков перед закрытием брокера сообщении"""
@@ -40,7 +43,12 @@ class ComponentDataCollector(Node):
 
     def get_data(self):
         """Получение текущих данных компонентов"""
-        return (self.data_lidar,self.data_imu,self.data_joint_states)
+        return {
+            'joint_states': self.data_joint_states,
+            'imu': self.data_imu,
+            'lidar': self.data_lidar,
+            'odometry': self.data_odom,
+        }
 
     def lidar_callback(self,msg):
         """Callback при получении сообщения с лидара"""
@@ -74,3 +82,9 @@ class ComponentDataCollector(Node):
                     "velocity": msg.velocity[i],
                     "effort"  : msg.effort[i]
             }
+    
+    def odom_callback(self, msg):
+        """Callback для разбора координат x, y, z из сообщения Odometry"""
+        pos = msg.pose.pose.position
+        self.data_odom["position"]["x"] = pos.x
+        self.data_odom["position"]["y"] = pos.y

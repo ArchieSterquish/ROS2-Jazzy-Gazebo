@@ -20,6 +20,7 @@ pkg_share = get_package_share_directory('robot_tppo')
 # - colorful_scene.sdf
 # - default.sdf
 DEFAULT_WORLD_FILE = os.path.join(pkg_share,'worlds','default.sdf')
+DEFAULT_WORLD_FILE = os.path.join(pkg_share,'worlds','test_new.sdf')
 world_file = DEFAULT_WORLD_FILE
 
 class App(tk.Tk):
@@ -145,12 +146,12 @@ def generate_launch_description():
             '-name', 'robot_tppo',
             '-x', '0.0',
             '-y', '0.0',
-            '-z', '0.1'
+            '-z', '0.6'
         ],
         output='screen'
     )
 
-    # Bridge для преобразования сообщений между ROS и GZ
+    ## Bridge для преобразования сообщений между ROS и GZ
     gz_bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
@@ -163,9 +164,10 @@ def generate_launch_description():
             "/odom@nav_msgs/msg/Odometry@gz.msgs.Odometry",
             "/tf@tf2_msgs/msg/TFMessage@gz.msgs.Pose_V",
             "imu@sensor_msgs/msg/Imu@gz.msgs.IMU",
+            '/model/robot_tppo/odometry_with_covariance@nav_msgs/msg/Odometry@gz.msgs.OdometryWithCovariance',           
         ],
         output='screen',
-    )
+    ) 
     
     executables_list = [        
         rsp_node,

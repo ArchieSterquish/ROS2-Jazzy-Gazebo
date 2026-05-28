@@ -33,7 +33,8 @@ class Robot:
 
     def get_sensors_data(self):
         """ Получение данных с компонентов роботоа"""
-        return self.data_collector.get_data()
+        data = self.data_collector.get_data()
+        return data
   
     def move_forward(self): 
         """Двигает робота вперёд"""

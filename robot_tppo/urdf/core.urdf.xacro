@@ -14,7 +14,6 @@
     <!-- Odom link (корень без инерции) -->
     <link name="odom"/>
 
-
     <!-- Основная платформа (с инерцией) -->
     <link name="base_link">
         <visual>
@@ -52,14 +51,12 @@
         </visual>
     </link>
 
-
     <joint name="left_front_base_joint" type="fixed">
         <parent link="base_link"/>
         <child link="left_front_base"/>
         <!-- Joint находится в позиции оси колеса -->
         <origin xyz="0.05 0.13 0"/>
     </joint>
-
 
     <!-- Переднее левое колесо -->
     <link name="left_front_wheel">

@@ -4,6 +4,7 @@
     <xacro:include filename="camera.urdf.xacro"/> 
     <xacro:include filename="lidar.urdf.xacro"/> 
     <xacro:include filename="inertial_measuring_unit.urdf.xacro"/> 
+    <xacro:include filename="odometry.urdf.xacro"/> 
 
     <ros2_control name="my_robot_hardware" type="system">
         <hardware>

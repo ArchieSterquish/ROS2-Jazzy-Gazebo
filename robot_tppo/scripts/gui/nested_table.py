@@ -6,8 +6,8 @@ class NestedTable(ttk.Treeview):
         self["columns"] = ("value",)
         self.column("#0", width=200, stretch=True)
         self.column("value", width=100, stretch=True)
-        self.heading("#0", text="Field")
-        self.heading("value", text="Value")
+        self.heading("#0", text="Датчик")
+        self.heading("value", text="Значение датчика")
         ttk.Style().configure('Treeview', rowheight=30)
         self.item_ids = {}  # Для хранения идентификаторов для быстрого доступа
         self.path_map = {}  # Для хранения пути к каждой клетке 

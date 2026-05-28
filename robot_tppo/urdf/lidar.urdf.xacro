@@ -31,7 +31,7 @@
         <mesh filename = "lidar.dae"/>
       </geometry>
     </visual-->
-</link>
+	</link>
 
   <gazebo reference="scan_link">
     <sensor name="gpu_lidar" type="gpu_lidar">

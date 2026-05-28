@@ -6,6 +6,8 @@ from std_msgs.msg import Header
 from geometry_msgs.msg import TwistStamped,Twist
 from sensor_msgs.msg import Image,LaserScan,Imu,JointState
 
+SPEED = 1.0
+
 class MessageBroker(Node):
     def __init__(self):
         super().__init__('msg_broker')
@@ -59,12 +61,13 @@ class MessageBroker(Node):
         msg.header.frame_id = "base_link" # Example frame ID
 
         msg.twist = Twist()
+
         # Фиксированные направления движения робота
         directions = {
-            'forward':  ((1.0,0.0,0.0),(0.0,0.0,0.0)),
-            'backward': ((-1.0,0.0,0.0),(0.0,0.0,0.0)),
-            'left':     ((0.0,0.0,0.0),(0.0,0.0,1.0)),
-            'right':    ((0.0,0.0,0.0),(0.0,0.0,-1.0)),
+            'forward':  ((SPEED,0.0,0.0),(0.0,0.0,0.0)),
+            'backward': ((-SPEED,0.0,0.0),(0.0,0.0,0.0)),
+            'left':     ((0.0,0.0,0.0),(0.0,0.0,SPEED)),
+            'right':    ((0.0,0.0,0.0),(0.0,0.0,-SPEED)),
         }
         # Создаём Twist сообщение
         try:
@@ -76,7 +79,6 @@ class MessageBroker(Node):
             msg.twist.angular.y = vec_ang[1]
             msg.twist.angular.z = vec_ang[2]
         except:
-            #self.get_logger().error(f"Получено неизвестное направление для робота. Производим остановку движения")
             msg.twist.linear.x = 0
             msg.twist.linear.y = 0
             msg.twist.linear.z = 0
@@ -91,7 +93,6 @@ class MessageBroker(Node):
         Аргументы:
             direction(str): направление в котором двигается робот
         """
-        #self.get_logger().info(f'Производится движение робота в направлении {direction}')
         msg = self.create_move_msg(direction)
         self.move_msg = msg
         self.pub_vel.publish(msg)
